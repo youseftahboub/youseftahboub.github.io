@@ -197,7 +197,13 @@ h1,h2,h3{text-wrap:balance;margin:0}
 
 /* home */
 .cal{margin-left:auto}
-.hero{container-type:inline-size;display:grid;gap:14px;justify-items:start;margin-bottom:34px}
+.home-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,40%);gap:12px 24px;align-items:end;margin-bottom:34px}
+.hero{container-type:inline-size;display:grid;gap:14px;justify-items:start;min-width:0}
+.portrait{position:relative;margin:0;display:grid;align-items:end;justify-items:center;padding-top:12px}
+.portrait::before{content:"";position:absolute;left:6%;right:2%;top:16%;bottom:6%;background:var(--red);clip-path:polygon(12% 0,100% 7%,88% 100%,0 92%)}
+.portrait::after{content:"";position:absolute;left:0;right:10%;top:30%;bottom:0;background-image:radial-gradient(circle,var(--blood) 2.4px,transparent 3px);background-size:11px 11px;clip-path:polygon(0 10%,70% 0,60% 100%,4% 100%);z-index:0}
+.portrait img{position:relative;z-index:1;display:block;width:100%;max-width:420px;height:auto;transform:rotate(2deg)}
+.portrait figcaption{position:absolute;z-index:2;left:2%;bottom:6%;font-family:var(--f-display);font-size:15px;letter-spacing:.06em;background:var(--ink);color:var(--paper);padding:5px 12px 7px;transform:rotate(-5deg) skewX(-12deg);box-shadow:4px 4px 0 var(--paper)}
 .hero-eye{margin:0;font-family:var(--f-mono);font-size:12px;letter-spacing:.22em;background:var(--red);padding:5px 12px;transform:skewX(-12deg)}
 .hero-name{font-size:clamp(28px,7vw,104px);font-size:clamp(28px,10.5cqi,104px);flex-wrap:nowrap}
 .hero-name.row2{margin-left:clamp(10px,4cqi,80px);margin-top:-6px}
@@ -411,7 +417,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 .fin-btns .cta-btn:not(.red){box-shadow:6px 6px 0 var(--red);background:var(--ink);color:var(--paper)}
 
 @media (max-width:820px){
-  .tip{max-width:calc(100% - 32px);bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+  .tip{max-width:calc(100% - 32px);bottom:calc(108px + env(safe-area-inset-bottom,0px))}
   .rec-mini{margin-top:0}
   .sh-cols{grid-template-columns:1fr}
   .sheet{transform:none}
@@ -455,6 +461,8 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 
 /* ---------- small screens ---------- */
 @media (max-width:820px){
+  .home-top{grid-template-columns:1fr}
+  .portrait{order:-1;width:min(300px,78%);justify-self:center}
   .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
   .app::before{width:100vw;left:0;height:150px;bottom:auto;clip-path:polygon(0 0,100% 0,100% 55%,0 100%)}
   .app::after{display:none}
@@ -541,6 +549,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 
     <!-- HOME -->
     <section class="sec" data-sec="home" hidden>
+      <div class="home-top">
       <div class="hero">
         <p class="hero-eye rise" style="--i:0">SERVICE DESK SUPERVISOR · M.S. CYBERSECURITY CANDIDATE</p>
         <h2 class="ransom hero-name rise" data-ransom="YOUSEF" style="--i:1" aria-label="Yousef Tahboub"></h2>
@@ -551,6 +560,8 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
           <button class="cta-btn alt" data-jump="gallery">OPEN GALLERY</button>
           <button class="cta-btn red" data-rec>RECRUITER MODE</button>
         </div>
+      </div>
+      <figure class="portrait rise" style="--i:2"><img src="portrait.webp" width="528" height="504" alt="Portrait of Yousef Tahboub"></figure>
       </div>
 
       <div class="numbers">
@@ -571,7 +582,6 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
         <div class="contact rise" style="--i:10">
           <p class="label">Contact</p>
           <div class="c-row"><span class="c-k">EMAIL</span><span class="c-v" id="cEmail">youseftahboub@yahoo.com</span><button class="copy" data-copy="cEmail">COPY</button></div>
-          <div class="c-row"><span class="c-k">PHONE</span><span class="c-v" id="cPhone">973-767-7773</span><button class="copy" data-copy="cPhone">COPY</button></div>
           <div class="c-row"><span class="c-k">LINKEDIN</span><a class="c-v" href="https://www.linkedin.com/in/yousef-tahboub" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub</a><span></span></div>
         </div>
       </div>
@@ -682,7 +692,6 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
       </div>
       <dl class="sh-contact">
         <dt>EMAIL</dt><dd id="rEmail">youseftahboub@yahoo.com</dd><dd><button class="copy" data-copy="rEmail">COPY</button></dd>
-        <dt>PHONE</dt><dd id="rPhone">973-767-7773</dd><dd><button class="copy" data-copy="rPhone">COPY</button></dd>
         <dt>LINKEDIN</dt><dd><a href="https://www.linkedin.com/in/yousef-tahboub" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub</a></dd><dd></dd>
         <dt>BASE</dt><dd>Clifton, NJ</dd><dd></dd>
       </dl>
@@ -707,7 +716,6 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
     <div class="fin-card">
       <h3>Thanks for exploring. Let's work together.</h3>
       <div class="fc-row"><span>EMAIL</span><b id="fEmail">youseftahboub@yahoo.com</b><button class="copy" data-copy="fEmail">COPY</button></div>
-      <div class="fc-row"><span>PHONE</span><b id="fPhone">973-767-7773</b><button class="copy" data-copy="fPhone">COPY</button></div>
       <div class="fc-row"><span>LINKEDIN</span><a href="https://www.linkedin.com/in/yousef-tahboub" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub</a><i></i></div>
       <div class="fin-btns"><button class="cta-btn red" data-rec>RECRUITER MODE</button><button class="cta-btn" id="finClose">KEEP EXPLORING</button></div>
     </div>
@@ -1204,11 +1212,11 @@ function buildPapers(){
 }
 
 const STATS=[
-  {name:'KNOWLEDGE',rank:'Erudite',lv:5,why:'4.00 GPA in the M.S.; 3.95 and Dean’s List every semester in the B.S.'},
-  {name:'PROFICIENCY',rank:'Expert',lv:5,why:'ServiceNow, identity verification, MFA enrollment, hardware builds, 100+ enterprise apps.'},
-  {name:'GUTS',rank:'Dauntless',lv:4,why:'Leads 30–40 student workers while finishing grad school.'},
-  {name:'KINDNESS',rank:'Angelic',lv:5,why:'Front line for 3,600+ campus clients; 30+ knowledge base articles written for others.'},
-  {name:'CHARM',rank:'Charismatic',lv:4,why:'Fluent in Arabic and English, intermediate Korean.'}
+  {name:'COMMUNICATION',rank:'LV 4',lv:4,why:'Explains fixes to 3,600+ campus clients; fluent in Arabic and English, intermediate in Korean.'},
+  {name:'SUPPORT',rank:'LV 5',lv:5,why:'Front-line IT across ServiceNow, identity verification, MFA enrollment, and hardware builds.'},
+  {name:'SECURITY',rank:'LV 4',lv:4,why:'M.S. in Cybersecurity at a 4.00 GPA, with published research on MFA and secure voting.'},
+  {name:'LEADERSHIP',rank:'LV 4',lv:4,why:'Supervises 30–40 student workers and runs their hiring and onboarding; Certified ScrumMaster.'},
+  {name:'DESIGN',rank:'LV 3',lv:3,why:'Built responsive, reusable UI components in Figma and Miro at Pure Technology.'}
 ];
 const SKILLS=[
   ['Programming',['Python','Java','HTML','C']],
