@@ -202,7 +202,14 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .portrait{position:relative;margin:0;display:grid;align-items:end;justify-items:center;padding-top:12px}
 .portrait::before{content:"";position:absolute;left:6%;right:2%;top:16%;bottom:6%;background:var(--red);clip-path:polygon(12% 0,100% 7%,88% 100%,0 92%)}
 .portrait::after{content:"";position:absolute;left:0;right:10%;top:30%;bottom:0;background-image:radial-gradient(circle,var(--blood) 2.4px,transparent 3px);background-size:11px 11px;clip-path:polygon(0 10%,70% 0,60% 100%,4% 100%);z-index:0}
-.portrait img{position:relative;z-index:1;display:block;width:100%;max-width:420px;height:auto;transform:rotate(2deg)}
+.unmask{position:relative;z-index:1;display:grid;width:100%;max-width:440px;padding:0;transform:rotate(2deg);cursor:pointer}
+.unmask img{grid-area:1/1;display:block;width:100%;height:auto;transition:opacity .35s,transform .35s cubic-bezier(.2,1.4,.4,1)}
+.unmask .pr{opacity:0;transform:scale(.98) rotate(-1deg)}
+.unmask:hover .pr,.unmask:focus-visible .pr,.unmask[aria-pressed="true"] .pr{opacity:1;transform:none}
+.unmask:hover .pd,.unmask:focus-visible .pd,.unmask[aria-pressed="true"] .pd{opacity:0;transform:scale(1.03) rotate(2deg)}
+.um-tag{position:absolute;right:4%;top:10%;font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;background:var(--ink);color:var(--paper);padding:5px 10px;transform:rotate(6deg) skewX(-12deg);box-shadow:3px 3px 0 var(--red);transition:opacity .2s}
+.unmask:hover .um-tag,.unmask[aria-pressed="true"] .um-tag{opacity:0}
+@media (hover:none){.um-tag::after{content:" · TAP"}}
 .portrait figcaption{position:absolute;z-index:2;left:2%;bottom:6%;font-family:var(--f-display);font-size:15px;letter-spacing:.06em;background:var(--ink);color:var(--paper);padding:5px 12px 7px;transform:rotate(-5deg) skewX(-12deg);box-shadow:4px 4px 0 var(--paper)}
 .hero-eye{margin:0;font-family:var(--f-mono);font-size:12px;letter-spacing:.22em;background:var(--red);padding:5px 12px;transform:skewX(-12deg)}
 .hero-name{font-size:clamp(28px,7vw,104px);font-size:clamp(28px,10.5cqi,104px);flex-wrap:nowrap}
@@ -561,7 +568,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
           <button class="cta-btn red" data-rec>RECRUITER MODE</button>
         </div>
       </div>
-      <figure class="portrait rise" style="--i:2"><img src="portrait.webp" width="528" height="504" alt="Portrait of Yousef Tahboub"></figure>
+      <figure class="portrait rise" style="--i:2"><button class="unmask" id="unmask" aria-pressed="false" aria-label="Show the real photo"><img class="pd" src="portrait-dots.webp" width="580" height="553" alt="Halftone portrait of Yousef Tahboub"><img class="pr" src="portrait.webp" width="528" height="504" alt="" loading="lazy"><span class="um-tag">HOVER TO UNMASK</span></button></figure>
       </div>
 
       <div class="numbers">
@@ -1456,6 +1463,11 @@ function closeRec(){const r=$('#rec');if(r.hidden)return;r.hidden=true;SFX.play(
 $('#recClose').addEventListener('click',closeRec);
 document.addEventListener('click',e=>{if(e.target.closest('[data-rec]')){e.preventDefault();openRec();}});
 
+/* ---------- portrait unmask ---------- */
+(()=>{const u=$('#unmask');if(!u)return;let last=0;
+  u.addEventListener('mouseenter',()=>{const n=Date.now();if(n-last>600){SFX.play('flip');last=n;}});
+  u.addEventListener('click',()=>{const on=u.getAttribute('aria-pressed')!=='true';u.setAttribute('aria-pressed',on?'true':'false');SFX.play('flip');});
+})();
 /* ---------- boot ---------- */
 buildTimeline();buildMissions();buildPapers();buildStats();buildRecruiter();
 const fontsReady=(document.fonts&&document.fonts.ready)?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]):Promise.resolve();
