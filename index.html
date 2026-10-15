@@ -874,7 +874,7 @@ const SFX=(()=>{
     v.frequency.setValueAtTime(110,t);v.frequency.exponentialRampToValueAtTime(880,t+dur);lp.type='lowpass';lp.frequency.setValueAtTime(400,t);lp.frequency.exponentialRampToValueAtTime(5000,t+dur);
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+.03);v.connect(lp);lp.connect(g);g.connect(o);send(g,.4);v.start(t);v.stop(t+dur+.05);}
 
-  let playing=false,mode='lite',step=0,nextT=0,timer=null;
+  let playing=false,mode='lite',step=0,nextT=0,timer=null,ahead=.15;
   function playStep(s,t){
     const o=musBus,b32=Math.floor(s/16),bar=b32%8,st=s%16,[root,ch]=P[bar*2+(st>=8?1:0)];
     if(mode==='lite'){
@@ -919,13 +919,16 @@ const SFX=(()=>{
     }
   }
   function sched(){if(!ctx||ctx.state!=='running')return;
-    while(nextT<ctx.currentTime+.15){playStep(step,nextT);nextT+=ST*(step%2?.9:1.1);step=(step+1)%512;}}
+    while(nextT<ctx.currentTime+ahead){playStep(step,nextT);nextT+=ST*(step%2?.9:1.1);step=(step+1)%512;}}
   const level=()=>mode==='full'?.6:.5;
   function fade(to,sec){const c=ctx,g=musBus.gain;g.cancelScheduledValues(c.currentTime);g.setValueAtTime(g.value,c.currentTime);g.linearRampToValueAtTime(to,c.currentTime+sec);}
   function startMusic(){if(!musOn||playing)return;const c=ac();if(!c)return;
     playing=true;step=0;nextT=c.currentTime+.08;fade(level(),1.2);timer=setInterval(sched,25);sched();}
   function stopMusic(){if(!playing)return;playing=false;clearInterval(timer);timer=null;if(ctx)fade(0,.35);}
-  document.addEventListener('visibilitychange',()=>{if(!ctx)return;if(document.hidden)ctx.suspend();else{ctx.resume();if(playing)nextT=Math.max(nextT,ctx.currentTime+.05);}});
+  /* keep music going in background tabs: browsers throttle timers there, so schedule further ahead */
+  document.addEventListener('visibilitychange',()=>{if(!ctx)return;
+    if(document.hidden){ahead=2;if(!playing)ctx.suspend();else sched();}
+    else{ahead=.15;ctx.resume();if(playing)nextT=Math.max(nextT,ctx.currentTime+.05);}});
 
   let last=0;
   return{
