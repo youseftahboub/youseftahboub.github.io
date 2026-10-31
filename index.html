@@ -201,6 +201,8 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .mission .see:hover{background:var(--ink)}
 .mission:nth-child(even) .see:hover{background:var(--paper);color:var(--ink)}
 .mission.edu{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 2px var(--paper)}
+.mission.flash{animation:flash 1.1s ease-out}
+@keyframes flash{0%,40%{outline:4px solid var(--red);outline-offset:4px}100%{outline:4px solid transparent;outline-offset:10px}}
 .subhead{font-family:var(--f-serif);font-size:30px;margin:26px 0 4px;color:var(--red)}
 
 /* stats */
@@ -566,7 +568,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
     <i class="mcur" id="mcur" aria-hidden="true"></i>
     <button class="mi" data-go="home" style="--r:-2deg"><b>HOME</b><small>OVERVIEW</small></button>
     <button class="mi" data-go="timeline" style="--r:-5deg"><b>TIMELINE</b><small>EXPERIENCE + SCHOOL</small></button>
-    <button class="mi" data-go="intel" style="--r:2deg"><b>INTEL</b><small>RESEARCH + GALLERY</small></button>
+    <button class="mi" data-go="intel" style="--r:2deg"><b>INTEL</b><small>ACHIEVEMENTS + RESEARCH</small></button>
     <button class="mi" data-go="stats" style="--r:3deg"><b>STATS</b><small>SKILLS + TOOLS</small></button>
     <button class="mi secret" data-go="archive" style="--r:-7deg" hidden><b>ARCHIVE</b><small>UNLOCKED</small></button>
     <button class="rec-mini" data-rec>RECRUITER MODE ⇢</button>
@@ -613,6 +615,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
           <div><dt>STUDY</dt><dd>M.S. Cybersecurity<small id="gradCount">Expected May 2027</small></dd></div>
           <div><dt>DEGREE</dt><dd>B.S. Information Technology<small>May 2026 · 3.95 GPA · Dean's List all semesters</small></dd></div>
           <div><dt>CERT</dt><dd>Certified ScrumMaster®<small>Scrum Alliance</small></dd></div>
+          <div><dt>LANGUAGES</dt><dd>Arabic, English<small>Korean, intermediate</small></dd></div>
         </dl>
         <div class="contact rise" style="--i:10">
           <p class="label">Contact</p>
@@ -626,7 +629,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 
     <!-- TIMELINE -->
     <section class="sec" data-sec="timeline" hidden>
-      <p class="label rise" style="--i:0">Aug 2024 → May 2027 · click a bar to see its artwork · scroll sideways on phones</p>
+      <p class="label rise" style="--i:0">Aug 2024 → May 2027 · click a bar for details · scroll sideways on phones</p>
       <div class="tl-wrap rise" style="--i:1"><div class="tl" id="tl"></div></div>
       <div class="tl-legend rise" style="--i:2">
         <span><i class="lg-bar"></i>Role</span><span><i class="lg-dia"></i>Degree</span><span><i class="lg-star"></i>Publication</span><span><i class="lg-now"></i>Today</span>
@@ -635,6 +638,8 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
       <div class="missions" id="missions"></div>
       <h3 class="subhead rise">Education</h3>
       <div class="missions" id="edu"></div>
+      <h3 class="subhead rise">Certification</h3>
+      <div class="missions" id="certs"></div>
     </section>
 
     <!-- INTEL -->
@@ -665,9 +670,6 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
       </div>
       <h3 class="g-head rise" style="--i:4">PUBLICATIONS</h3>
       <div class="papers" id="papers"></div>
-      <h3 class="g-head g-art">CASE FILES · ART</h3>
-      <div class="gallery" id="gallery"></div>
-      <p class="label gal-note">Newest work first, then degrees. Hover for details, click to open.</p>
     </section>
 
     <!-- STATS -->
@@ -1037,91 +1039,6 @@ function star(x,cx,cy,r1,r2,n,rot){const p=[];for(let i=0;i<n*2;i++){const r=i%2
 function tag(x,text,px,py,size,bg,fg,rot){x.save();x.translate(px,py);x.rotate(rot||0);x.font=size+'px '+F.m;const w=x.measureText(text).width;x.fillStyle=bg;x.fillRect(-8,-size-4,w+16,size+14);x.fillStyle=fg;x.fillText(text,0,0);x.restore();}
 
 const DRAW={
-  night(x,w,h,R){
-    x.fillStyle=C.ink;x.fillRect(0,0,w,h);
-    halftone(x,w,h,22,C.blood,(px,py)=>1.2-Math.hypot(px-w,py)/(w*.9));
-    const cx=w*.4,cy=h*.58;x.lineCap='butt';
-    for(let i=1;i<11;i++){x.strokeStyle=i%3?C.paper:C.red;x.globalAlpha=1-i*.07;x.lineWidth=4+i*1.6;const a=R()*6;x.beginPath();x.arc(cx,cy,i*46,a,a+2+R()*3.5);x.stroke();}
-    x.globalAlpha=1;
-    poly(x,[[0,h*.72],[w*.8,h*.3],[w*.86,h*.4],[0,h*.97]],C.red);
-    poly(x,[[0,h*.83],[w*.83,h*.35],[w*.84,h*.37],[0,h*.86]],C.ink);
-    x.fillStyle=C.paper;x.beginPath();x.arc(cx,cy,26,0,7);x.fill();
-  },
-  cipher(x,w,h,R){
-    x.fillStyle=C.red;x.fillRect(0,0,w,h);
-    x.font='bold 26px '+F.m;const hex='0123456789ABCDEF';
-    for(let y=36;y<h;y+=38)for(let px=12;px<w;px+=34){x.fillStyle=R()<.08?C.paper:'rgba(12,10,11,'+(.35+R()*.6)+')';x.fillText(hex[Math.floor(R()*16)],px,y);}
-    const cx=w*.58,cy=h*.46,r=h*.27;
-    x.fillStyle=C.ink;x.beginPath();x.arc(cx+18,cy+18,r,0,7);x.fill();
-    x.fillStyle=C.paper;x.beginPath();x.arc(cx,cy,r,0,7);x.fill();
-    x.fillStyle=C.ink;x.beginPath();x.arc(cx,cy-r*.18,r*.2,0,7);x.fill();
-    poly(x,[[cx-r*.1,cy-r*.1],[cx+r*.1,cy-r*.1],[cx+r*.18,cy+r*.5],[cx-r*.18,cy+r*.5]],C.ink);
-    x.fillStyle='rgba(12,10,11,.14)';for(let y=0;y<h;y+=6)x.fillRect(0,y,w,2);
-    poly(x,[[0,h*.86],[w,h*.7],[w,h*.8],[0,h]],C.ink);
-  },
-  pipeline(x,w,h,R){
-    x.fillStyle=C.paper;x.fillRect(0,0,w,h);
-    halftone(x,w,h,18,C.ink,(px,py)=>py/h-.35);
-    const n=10,bw=w/(n*1.6);
-    for(let i=0;i<n;i++){const bh=h*(.15+R()*.55)*(0.5+i/n*.7);const bx=w*.08+i*bw*1.5;x.save();x.translate(bx,h*.9);x.transform(1,0,-.25,1,0,0);x.fillStyle=i%4===3?C.ink:C.red;x.fillRect(0,-bh,bw,bh);x.restore();}
-    x.strokeStyle=C.ink;x.lineCap='round';
-    for(let k=0;k<3;k++){x.lineWidth=14-k*4;x.beginPath();x.moveTo(-20,h*(.2+k*.08));x.bezierCurveTo(w*.3,h*(.05+R()*.3),w*.6,h*(.4+R()*.3),w+20,h*(.15+k*.1));x.stroke();}
-    poly(x,star(w*.82,h*.22,70,30,5,-.3),C.ink);
-    poly(x,star(w*.82,h*.22,52,22,5,-.3),C.red);
-  },
-  wire(x,w,h,R){
-    x.fillStyle=C.ink;x.fillRect(0,0,w,h);
-    for(let i=0;i<6;i++){x.save();x.translate(w*(.25+i*.08),h*(.2+i*.07));x.rotate(-.18+i*.05);
-      const rw=w*.42,rh=h*.34;
-      x.fillStyle=i===3?C.red:i%2?C.smoke:C.ink;x.fillRect(0,0,rw,rh);
-      x.strokeStyle=C.paper;x.lineWidth=3;x.strokeRect(0,0,rw,rh);
-      x.fillStyle=i===3?C.paper:C.ash;x.fillRect(16,16,rw*.4,12);
-      for(let l=0;l<3;l++)x.fillRect(16,46+l*22,rw*(.3+R()*.5),8);
-      x.fillStyle=i===3?C.ink:C.red;x.fillRect(rw-90,rh-46,74,30);
-      x.restore();}
-    const ax=w*.7,ay=h*.62,s=h*.36;
-    poly(x,[[ax+10,ay+10],[ax+10,ay+s+10],[ax+s*.3+10,ay+s*.72+10],[ax+s*.5+10,ay+s*1.08+10],[ax+s*.66+10,ay+s+10],[ax+s*.46+10,ay+s*.64+10],[ax+s*.82+10,ay+s*.62+10]],C.ink);
-    poly(x,[[ax,ay],[ax,ay+s],[ax+s*.3,ay+s*.72],[ax+s*.5,ay+s*1.08],[ax+s*.66,ay+s],[ax+s*.46,ay+s*.64],[ax+s*.82,ay+s*.62]],C.paper);
-  },
-  cable(x,w,h,R){
-    x.fillStyle=C.paper;x.fillRect(0,0,w,h);
-    halftone(x,w,h,24,C.red,(px,py)=>1.1-Math.hypot(px,py-h)/(w*.7));
-    x.lineCap='round';
-    for(let i=0;i<14;i++){x.strokeStyle=i%3===0?C.red:C.ink;x.lineWidth=6+R()*16;x.beginPath();x.moveTo(R()*w,-20);x.bezierCurveTo(R()*w,R()*h,R()*w,R()*h,R()*w,h+20);x.stroke();}
-    const cx=w*.5,cy=h*.5;
-    poly(x,star(cx,cy,h*.26,h*.17,12,0),C.ink);
-    poly(x,star(cx,cy,h*.22,h*.14,12,.1),C.paper);
-    x.fillStyle=C.red;x.font=Math.round(h*.12)+'px '+F.d;x.textAlign='center';x.textBaseline='middle';x.fillText('IT',cx,cy+4);x.textAlign='left';x.textBaseline='alphabetic';
-  },
-  sprint(x,w,h,R){
-    x.fillStyle=C.red;x.fillRect(0,0,w,h);
-    for(let i=0;i<26;i++){const y=R()*h,len=w*(.2+R()*.6),th=4+R()*22,sx=R()*w-len*.5;poly(x,[[sx,y],[sx+len,y-len*.35],[sx+len,y-len*.35+th],[sx,y+th]],R()<.2?C.paper:C.ink);}
-    poly(x,star(w*.48+14,h*.52+14,h*.36,h*.15,5,-Math.PI/2+.2),C.ink);
-    poly(x,star(w*.48,h*.52,h*.36,h*.15,5,-Math.PI/2+.2),C.paper);
-    x.save();x.translate(w*.48,h*.54);x.rotate(-.08);x.font=Math.round(h*.085)+'px '+F.d;const tw=x.measureText('CSM').width;
-    x.fillStyle=C.red;x.fillRect(-tw/2-10,-h*.055+8,tw+32,h*.11);x.fillStyle=C.ink;x.fillRect(-tw/2-18,-h*.055,tw+36,h*.11);
-    x.fillStyle=C.paper;x.textAlign='center';x.textBaseline='middle';x.fillText('CSM',0,4);x.restore();x.textAlign='left';x.textBaseline='alphabetic';
-  },
-  tongues(x,w,h,R){
-    x.fillStyle=C.ink;x.fillRect(0,0,w,h);
-    halftone(x,w,h,16,'#3a2f32',(px,py)=>.5+.5*Math.sin(px*.01+py*.012));
-    x.textBaseline='alphabetic';
-    x.font=Math.round(h*.95)+'px '+F.d;x.fillStyle=C.paper;x.fillText('Y',w*.02,h*.92);
-    x.save();x.translate(w*.42,h*.86);x.rotate(.08);x.font=Math.round(h*.78)+'px "Noto Naskh Arabic","Geeza Pro","Arial",sans-serif';x.fillStyle=C.red;x.fillText('ي',0,0);x.restore();
-    x.save();x.translate(w*.6,h*.62);x.rotate(-.1);x.font='bold '+Math.round(h*.5)+'px "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif';x.lineWidth=8;x.strokeStyle=C.paper;x.strokeText('유',0,0);x.restore();
-    poly(x,[[0,h*.1],[w,0],[w,h*.04],[0,h*.13]],C.red);
-  },
-  commence(x,w,h,R){
-    x.fillStyle=C.ink;x.fillRect(0,0,w,h);
-    const cx=w*.5,cy=h*.6,N=28;
-    for(let i=0;i<N;i++){const a=i/N*Math.PI*2,b=(i+1)/N*Math.PI*2,L=Math.max(w,h)*1.2;poly(x,[[cx,cy],[cx+Math.cos(a)*L,cy+Math.sin(a)*L],[cx+Math.cos(b)*L,cy+Math.sin(b)*L]],i%2?C.red:C.blood);}
-    const s=h*.22;
-    poly(x,[[cx,cy-s*1.1],[cx+s*1.6,cy-s*.4],[cx,cy+s*.3],[cx-s*1.6,cy-s*.4]],C.ink);
-    poly(x,[[cx,cy-s],[cx+s*1.45,cy-s*.42],[cx,cy+s*.16],[cx-s*1.45,cy-s*.42]],C.paper);
-    poly(x,[[cx-s*.8,cy-s*.1],[cx+s*.8,cy-s*.1],[cx+s*.7,cy+s*.7],[cx-s*.7,cy+s*.7]],C.ink);
-    x.strokeStyle=C.paper;x.lineWidth=6;x.beginPath();x.moveTo(cx+s*1.2,cy-s*.4);x.lineTo(cx+s*1.2,cy+s*.6);x.stroke();
-    x.fillStyle=C.paper;x.beginPath();x.arc(cx+s*1.2,cy+s*.66,12,0,7);x.fill();
-  },
   card(x,w,h,R){
     x.fillStyle=C.red;x.fillRect(0,0,w,h);
     halftone(x,w,h,20,C.blood,(px,py)=>.6+.4*Math.sin((px+py)*.008));
@@ -1153,16 +1070,6 @@ const DRAW={
 };
 
 /* ---------- content (from résumé) ---------- */
-const ART=[
-  {id:'night',title:'Night Shift',tag:'Service Desk Supervisor · Montclair State University',date:'NOV 2024 – NOW',note:'Resolves technical issues for 3,600+ campus clients and supervises 30–40 student workers.',w:1200,h:900,c:4,rw:3,cm:2,rm:2,tr:'-1deg'},
-  {id:'wire',title:'Wireframe Riot',tag:'UI/UX Product Design Intern · Pure Technology Inc.',date:'JUL – DEC 2025',note:'Designed responsive, reusable UI components in Figma and Miro.',w:1000,h:1000,c:2,rw:3,cm:1,rm:2,tr:'1.5deg'},
-  {id:'pipeline',title:'Pipeline',tag:'Data Science & Data Engineering Co-op · Johnson & Johnson',date:'JAN – JUN 2025',note:'Supported 100+ global enterprise applications and managed vendor incidents from intake to resolution.',w:1200,h:800,c:3,rw:2,cm:1,rm:2,tr:'.8deg'},
-  {id:'cable',title:'Patch Panel',tag:'IT Intern · TeamLogic IT',date:'AUG – DEC 2024',note:'Built PCs, configured Windows to client specs, and troubleshot issues through a ticketing system.',w:900,h:900,c:3,rw:2,cm:1,rm:2,tr:'-1.2deg'},
-  {id:'cipher',title:'Cipher Wall',tag:'M.S. Cybersecurity · Montclair State University',date:'EXP. MAY 2027',note:'4.00 GPA. Coursework in cryptography, network security, and computer security.',w:900,h:1000,c:2,rw:3,cm:1,rm:2,tr:'1deg'},
-  {id:'commence',title:'Commencement',tag:'B.S. Information Technology · Montclair State University',date:'MAY 2026',note:'3.95 GPA and Dean’s List every semester.',w:900,h:1000,c:2,rw:3,cm:1,rm:2,tr:'-1deg'},
-  {id:'sprint',title:'Sprint Star',tag:'Certified ScrumMaster® · Scrum Alliance',date:'CERTIFIED',note:'Certified to lead agile teams through the Scrum framework.',w:1000,h:900,c:2,rw:3,cm:1,rm:2,tr:'1.5deg'},
-  {id:'tongues',title:'Three Tongues',tag:'Languages',date:'AR · EN · KO',note:'Fluent in Arabic and English, intermediate in Korean.',w:1300,h:800,c:6,rw:2,cm:2,rm:2,tr:'.4deg'}
-];
 const SECRET=[
   {id:'card',title:'Calling Card',tag:'Archive 01',date:'CLASSIFIED',note:'A note left for whoever runs your network next. Signed and delivered.',w:1000,h:1250,tr:'-1deg'},
   {id:'route',title:'Phantom Route',tag:'Archive 02',date:'CLASSIFIED',note:'The path so far: a ticket queue, three internships, a team to lead, and a security degree at the end of the line.',w:1000,h:1250,tr:'1.5deg'}
@@ -1184,10 +1091,8 @@ function tileHTML(a,i,list,total){
   return b;
 }
 function buildGallery(){
-  const g=$('#gallery');g.innerHTML='';ART.forEach((a,i)=>g.appendChild(tileHTML(a,i,ART,ART.length)));
   const ag=$('#archiveGrid');ag.innerHTML='';SECRET.forEach((a,i)=>{const t=tileHTML(a,i,SECRET,SECRET.length);t.classList.add('rise');t.style.setProperty('--i',i+1);ag.appendChild(t);});
 }
-const artIndex=id=>ART.findIndex(a=>a.id===id);
 
 /* ---------- achievements (real photos) ---------- */
 const ACH=[{
@@ -1243,6 +1148,10 @@ const JOBS=[
   {org:'TeamLogic IT',role:'IT Intern',place:'Morris Plains, NJ',when:'AUG 2024 — DEC 2024',s:mi(2024,7),e:mi(2025,0),short:'IT INTERN',art:'cable',r:'.7deg',
    pts:['Built PCs and installed and configured Windows to client specifications.','Troubleshot hardware and software issues through a ticketing system.','Performed on-site assessments that sped up issue resolution.']}
 ];
+const CERTS=[
+  {org:'Scrum Alliance',role:'Certified ScrumMaster® (CSM)',place:'',when:'CERTIFIED',art:'sprint',r:'.4deg',
+   pts:['Certified to lead agile teams through the Scrum framework.']}
+];
 const EDU=[
   {org:'Montclair State University',role:'M.S. Cybersecurity',place:'Montclair, NJ',when:'EXPECTED MAY 2027',art:'cipher',r:'.4deg',
    pts:['GPA: 4.00','Coursework: Cryptography, Network Security, Computer Security']},
@@ -1270,15 +1179,17 @@ function buildTimeline(){
     <button class="tl-mark star" data-jump="intel" style="left:${pct(mi(2026,8)+.5)}" aria-label="2 preprints, September 2026"><span>SEP '26 · ×2</span></button></div>`;
   tl.innerHTML=h;
   if(nowIdx>0&&nowIdx<SPAN){const n=document.createElement('div');n.className='tl-now';n.style.left=`calc(var(--lab) + (100% - var(--lab)) * ${nowIdx/SPAN})`;n.innerHTML=`<span>TODAY</span>`;tl.appendChild(n);}
-  tl.querySelectorAll('[data-art]').forEach(b=>b.addEventListener('click',()=>openViewer(ART,artIndex(b.dataset.art))));
+  tl.querySelectorAll('[data-art]').forEach(b=>b.addEventListener('click',()=>{const c=document.getElementById('m-'+b.dataset.art);if(!c)return;SFX.play('select');
+    c.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');}));
 }
 function buildMissions(){
   let i=4;
   const add=(box,it,edu)=>{const d=document.createElement('article');d.className='mission rise'+(edu?' edu':'');d.style.cssText=`--mr:${it.r};--i:${i++}`;
-    d.innerHTML=`<span class="when">${it.when}</span><h3>${it.role}</h3><p>${it.org}</p><span class="meta">${it.place.toUpperCase()}</span><button class="see">VIEW ART</button><ul>${it.pts.map(p=>`<li>${p}</li>`).join('')}</ul>`;
-    d.querySelector('.see').addEventListener('click',()=>openViewer(ART,artIndex(it.art)));box.appendChild(d);};
+    d.innerHTML=`<span class="when">${it.when}</span><h3>${it.role}</h3><p>${it.org}</p>${it.place?`<span class="meta">${it.place.toUpperCase()}</span>`:''}<ul>${it.pts.map(p=>`<li>${p}</li>`).join('')}</ul>`;
+    if(it.art)d.id='m-'+it.art;box.appendChild(d);};
   JOBS.forEach(it=>add($('#missions'),it,false));
   EDU.forEach(it=>add($('#edu'),it,true));
+  CERTS.forEach(it=>add($('#certs'),it,true));
 }
 function buildPapers(){
   const P=$('#papers');PUBS.forEach((p,i)=>{const d=document.createElement('article');d.className='paper rise';d.style.cssText=`--pr:${p.r};--i:${i+1}`;
@@ -1392,7 +1303,7 @@ addEventListener('keydown',e=>{
 });
 
 /* ---------- viewer ---------- */
-let vList=ART,vIdx=0,lastFocus=null;
+let vList=[],vIdx=0,lastFocus=null;
 function fill(dir){
   const a=vList[vIdx],img=$('#vImg'),cap=$('#vCap');
   img.src=a.src;img.alt=a.title;
@@ -1541,7 +1452,7 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-rec]')){e.preve
 /* ---------- boot ---------- */
 buildTimeline();buildMissions();buildPapers();buildStats();buildRecruiter();buildFeats();
 const fontsReady=(document.fonts&&document.fonts.ready)?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))]):Promise.resolve();
-fontsReady.then(()=>{[...ART,...SECRET].forEach(render);buildGallery();});
+fontsReady.then(()=>{SECRET.forEach(render);buildGallery();});
 })();
 </script>
 </body>
