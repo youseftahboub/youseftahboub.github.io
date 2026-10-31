@@ -168,6 +168,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 /* achievements */
 .g-head{display:inline-block;margin:0 0 18px;font-family:var(--f-display);font-weight:400;font-size:clamp(16px,1.6vw,20px);letter-spacing:.06em;background:var(--paper);color:var(--ink);padding:4px 16px 6px;transform:skewX(-12deg) rotate(-1deg);box-shadow:5px 5px 0 var(--red)}
 .feats{display:grid;gap:40px;margin-bottom:46px}
+.g-art{margin-top:52px}
 .feat{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:30px 34px;align-items:start}
 .f-photos{position:relative;padding:0 0 34px 6px;min-width:0}
 .f-ph{position:relative;display:block;padding:0;background:var(--paper);transition:transform .25s cubic-bezier(.2,1.4,.4,1)}
@@ -565,12 +566,11 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
     <i class="mcur" id="mcur" aria-hidden="true"></i>
     <button class="mi" data-go="home" style="--r:-2deg"><b>HOME</b><small>OVERVIEW</small></button>
     <button class="mi" data-go="timeline" style="--r:-5deg"><b>TIMELINE</b><small>EXPERIENCE + SCHOOL</small></button>
-    <button class="mi" data-go="gallery" style="--r:2deg"><b>GALLERY</b><small>CASE FILES AS ART</small></button>
-    <button class="mi" data-go="intel" style="--r:-3deg"><b>INTEL</b><small>PUBLICATIONS</small></button>
+    <button class="mi" data-go="intel" style="--r:2deg"><b>INTEL</b><small>RESEARCH + GALLERY</small></button>
     <button class="mi" data-go="stats" style="--r:3deg"><b>STATS</b><small>SKILLS + TOOLS</small></button>
     <button class="mi secret" data-go="archive" style="--r:-7deg" hidden><b>ARCHIVE</b><small>UNLOCKED</small></button>
     <button class="rec-mini" data-rec>RECRUITER MODE ⇢</button>
-    <div class="menu-foot">SECTIONS CLEARED <b id="seenCount">0 / 5</b><br>↑ ↓ MOVE · ENTER SELECT · ESC HOME<br>CLICK THE LOGO FOR THE MAIN MENU</div>
+    <div class="menu-foot">SECTIONS CLEARED <b id="seenCount">0 / 4</b><br>↑ ↓ MOVE · ENTER SELECT · ESC HOME<br>CLICK THE LOGO FOR THE MAIN MENU</div>
   </nav>
 
   <main class="stage" id="stage">
@@ -592,7 +592,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
         <p class="lede rise" style="--i:3">Yousef leads <em>Montclair State's service desk</em>, publishes security research, and is finishing an M.S. in Cybersecurity.</p>
         <div class="cta rise" style="--i:4">
           <button class="cta-btn" data-jump="timeline">VIEW TIMELINE</button>
-          <button class="cta-btn alt" data-jump="gallery">OPEN GALLERY</button>
+          <button class="cta-btn alt" data-jump="intel">SEE MY WORK</button>
           <button class="cta-btn red" data-rec>RECRUITER MODE</button>
         </div>
       </div>
@@ -623,14 +623,6 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
       <p class="whisper rise" style="--i:11">// on the start screen, the logo answers to five knocks. it also knows when it's showtime.</p>
     </section>
 
-    <!-- GALLERY -->
-    <section class="sec" data-sec="gallery" hidden>
-      <h3 class="g-head rise" style="--i:0">ACHIEVEMENTS</h3>
-      <div class="feats" id="feats"></div>
-      <h3 class="g-head rise" style="--i:3">CASE FILES · ART</h3>
-      <div class="gallery" id="gallery"></div>
-      <p class="label gal-note">Newest work first, then degrees. Hover for details, click to open.</p>
-    </section>
 
     <!-- TIMELINE -->
     <section class="sec" data-sec="timeline" hidden>
@@ -647,8 +639,11 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 
     <!-- INTEL -->
     <section class="sec" data-sec="intel" hidden>
-      <div class="demo rise" style="--i:0" id="demo">
-        <div class="demo-head"><span class="label">Live demo · why the second factor matters</span><button class="demo-replay" id="demoReplay">REPLAY</button></div>
+      <h3 class="g-head rise" style="--i:0">ACHIEVEMENTS</h3>
+      <div class="feats" id="feats"></div>
+      <h3 class="g-head rise" style="--i:2">LIVE DEMO</h3>
+      <div class="demo rise" style="--i:3" id="demo">
+        <div class="demo-head"><span class="label">Why the second factor matters</span><button class="demo-replay" id="demoReplay">REPLAY</button></div>
         <div class="demo-body">
           <div class="login">
             <div class="lg-title">CAMPUS SIGN-IN</div>
@@ -668,8 +663,11 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
           <p>The attacker guessed the password, but without the code from the real user's device, the account stays shut. A random 6-digit code is a 1-in-1,000,000 guess, and lockouts cap the tries.</p>
         </div>
       </div>
-      <p class="label rise" style="--i:1">Publications · arXiv preprints</p>
+      <h3 class="g-head rise" style="--i:4">PUBLICATIONS</h3>
       <div class="papers" id="papers"></div>
+      <h3 class="g-head g-art">CASE FILES · ART</h3>
+      <div class="gallery" id="gallery"></div>
+      <p class="label gal-note">Newest work first, then degrees. Hover for details, click to open.</p>
     </section>
 
     <!-- STATS -->
@@ -749,7 +747,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 <div class="fin" id="fin" role="dialog" aria-modal="true" aria-label="All sections cleared" hidden>
   <div class="fin-rays"></div>
   <div class="fin-core">
-    <p class="fin-eye">ALL 5 SECTIONS CLEARED</p>
+    <p class="fin-eye">ALL 4 SECTIONS CLEARED</p>
     <div class="fin-names" aria-label="Yousef Tahboub"><div class="ransom fin-name" id="finA"></div><div class="ransom fin-name row2" id="finB"></div></div>
     <div class="fin-card">
       <h3>Thanks for exploring. Let's work together.</h3>
@@ -1318,7 +1316,7 @@ function buildStats(){
 }
 
 /* ---------- navigation ---------- */
-const TITLES={home:'',timeline:'TIMELINE',gallery:'GALLERY',intel:'INTEL',stats:'STATS',archive:'ARCHIVE'};
+const TITLES={home:'',timeline:'TIMELINE',intel:'INTEL',stats:'STATS',archive:'ARCHIVE'};
 let current=null,busy=false;
 function wipe(mid,opt){
   opt=opt||{};SFX.play('wipe',{sec:opt.sec,back:opt.back,n:opt.sec&&TITLES[opt.sec]?TITLES[opt.sec].length:0});
@@ -1334,7 +1332,7 @@ function show(sec){
   const t=$('#secTitle');t.hidden=!TITLES[sec];if(TITLES[sec])ransom(t,TITLES[sec]);
   $$('.mi').forEach(m=>m.setAttribute('aria-current',m.dataset.go===sec?'true':'false'));
   $('#stage').scrollTop=0;current=sec;
-  if(sec==='intel')startDemo();else stopDemo();
+  stopDemo();demoSeen=false;
   if(!track(sec))setTimeout(showTip,250);
 }
 function go(sec){if(busy||sec===current)return;busy=true;wipe(()=>show(sec),{sec}).then(()=>busy=false);}
@@ -1469,6 +1467,8 @@ function startDemo(){
     $('#dVerdict').hidden=false;ransom($('#dVerdictText'),'ACCESS DENIED');},t+200,run);
 }
 $('#demoReplay').addEventListener('click',()=>{SFX.play('select');startDemo();});
+let demoSeen=false;
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&current==='intel'&&!demoSeen){demoSeen=true;startDemo();}}),{root:$('#stage'),threshold:.45}).observe($('#demo'));
 
 /* ---------- loading tips ---------- */
 const TIPS=[
@@ -1498,7 +1498,7 @@ function showTip(){
 function hideTip(){clearTimeout(tipTimer);$('#tip').hidden=true;}
 
 /* ---------- section progress + finale ---------- */
-const MAIN=['home','timeline','gallery','intel','stats'],seen=new Set();let finDone=false;
+const MAIN=['home','timeline','intel','stats'],seen=new Set();let finDone=false;
 function track(sec){
   if(!MAIN.includes(sec))return false;
   seen.add(sec);$('#seenCount').textContent=seen.size+' / '+MAIN.length;
