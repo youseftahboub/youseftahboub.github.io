@@ -901,17 +901,31 @@ const SFX=(()=>{
     [7,0,80,2],[7,2,76,2],[7,4,75,2],[7,6,76,6]
   ];
   const MELMAP={};MEL.forEach(([b,st,m,l])=>MELMAP[b*16+st]=[m,l]);
+  /* chorus: a second, brighter melody over the same chords */
+  const CHO=[
+    [0,0,84,1],[0,2,84,1],[0,3,82,1],[0,4,80,2],[0,7,79,1],[0,8,80,3],[0,12,77,2],[0,14,79,2],
+    [1,0,82,3],[1,3,79,1],[1,4,77,2],[1,6,74,2],[1,8,77,1],[1,10,79,2],[1,12,82,2],[1,14,86,2],
+    [2,0,86,2],[2,2,87,2],[2,4,86,1],[2,6,82,2],[2,8,79,3],[2,12,82,1],[2,14,84,2],
+    [3,0,84,2],[3,2,80,2],[3,4,77,2],[3,6,80,2],[3,8,83,3],[3,11,82,1],[3,12,79,2],[3,14,77,2],
+    [4,0,79,1],[4,2,80,1],[4,3,84,3],[4,8,87,2],[4,10,84,2],[4,12,82,2],[4,14,80,2],
+    [5,0,79,2],[5,2,77,1],[5,3,79,3],[5,8,82,2],[5,10,86,2],[5,12,84,4],
+    [6,0,84,2],[6,2,85,2],[6,4,87,2],[6,6,84,2],[6,8,80,2],[6,10,77,2],[6,12,80,2],[6,14,84,2],
+    [7,0,82,2],[7,2,80,2],[7,4,76,2],[7,6,75,2],[7,8,76,6],[7,14,72,2]
+  ];
+  const CHOMAP={};CHO.forEach(([b,st,m,l])=>CHOMAP[b*16+st]=[m,l]);
+  /* harmony: the nearest chord tone a third to a sixth below the melody */
+  function harm(m,root,ch){const pcs=new Set([root,...ch].map(x=>x%12));for(let d=3;d<=9;d++)if(pcs.has((m-d)%12))return m-d;return m-12;}
   function lead(o,t,m,dur,vel){
-    const f=mtof(m),g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=3;
-    lp.frequency.setValueAtTime(1200,t);lp.frequency.linearRampToValueAtTime(3200,t+.05);
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.045*vel,t+.012);g.gain.setValueAtTime(.045*vel,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+.08);
+    const f=mtof(m),g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=1.4;
+    lp.frequency.setValueAtTime(1000,t);lp.frequency.linearRampToValueAtTime(2300,t+.06);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.032*vel,t+.015);g.gain.setValueAtTime(.032*vel,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+.08);
     const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=5.6;
     lg.gain.setValueAtTime(0,t);lg.gain.linearRampToValueAtTime(f*.008,t+Math.min(dur,.35));lfo.connect(lg);
-    [['square',1],['sawtooth',1.004]].forEach(([ty,r])=>{const v=ctx.createOscillator();v.type=ty;v.frequency.value=f*r;lg.connect(v.frequency);v.connect(lp);v.start(t);v.stop(t+dur+.12);});
+    [['sawtooth',1],['triangle',1.004]].forEach(([ty,r])=>{const v=ctx.createOscillator();v.type=ty;v.frequency.value=f*r;lg.connect(v.frequency);v.connect(lp);v.start(t);v.stop(t+dur+.12);});
     lfo.start(t);lfo.stop(t+dur+.12);lp.connect(g);g.connect(o);send(g,.25);g.connect(dly);
   }
   function brass(o,t,ch,dur){ch.forEach(m=>{const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(400,t);
-    f.frequency.exponentialRampToValueAtTime(3200,t+.04);f.frequency.exponentialRampToValueAtTime(600,t+dur);f.connect(o);osc(f,'sawtooth',mtof(m+12),t,.01,.028,dur,0,.3);});}
+    f.frequency.exponentialRampToValueAtTime(3200,t+.04);f.frequency.exponentialRampToValueAtTime(600,t+dur);f.connect(o);osc(f,'sawtooth',mtof(m+12),t,.01,.02,dur,0,.3);});}
   const shaker=(o,t,v)=>nz(o,t,.035,.05*v,'highpass',6000,0,.7);
   const conga=(o,t,v,hi)=>{osc(o,'sine',hi?330:235,t,.002,.17*v,.14,hi?255:180);nz(o,t,.02,.04*v,'bandpass',1100,0,1.5);};
   const clap=(o,t,v)=>[0,.012,.024].forEach(d=>nz(o,t+d,d===.024?.15:.02,.16*v,'bandpass',1500,0,1.5,.3));
@@ -928,9 +942,11 @@ const SFX=(()=>{
       if(st%4===2)hat(o,t,.35);
       return;
     }
-    /* 32-bar arrangement: groove → lead melody → lead + brass → breakdown & build */
-    const pass=Math.floor(b32/8)%4,brk=pass===3&&bar<4,build=pass===3&&bar>=4;
+    /* 48-bar arrangement: groove → verse → chorus → bigger chorus → breakdown & build → final chorus */
+    const pass=Math.floor(b32/8)%6,brk=pass===4&&bar<4,build=pass===4&&bar>=4;
+    const chorus=pass===2||pass===3||pass===5,big=pass===3||pass===5;
     if(st===0&&bar===0&&pass>0)crash(o,t);
+    if(big&&st===0&&bar===4)crash(o,t);
     if(brk){if(st===4||st===12)clap(o,t,1);if(st%4===2)hat(o,t,.4);}
     else{
       if(build&&bar>=6){if(st%4===0)kick(o,t,1);}
@@ -941,31 +957,39 @@ const SFX=(()=>{
         if(st===4||st===12)snare(o,t,1);
         if(st===7||st===15)snare(o,t,.22);
         if(bar===7&&st>=13)snare(o,t,.35+(st-13)*.25);
+        if(big&&(st===4||st===12))clap(o,t,.55);
       }
       if(st===14)hat(o,t,.8,true);else hat(o,t,st%2?.3:.65);
+      if(big&&st%4===2)hat(o,t,.4,true);
       shaker(o,t,st%4===2?1:.5);
       if(pass>=1&&(st===3||st===9||st===11))conga(o,t,st===9?1:.7,st!==9);
+      if(big&&(st===5||st===13))conga(o,t,.6,true);
     }
-    if(pass===3&&bar===6&&st===0)riser(o,t,ST*32);
+    if(pass===4&&bar===6&&st===0)riser(o,t,ST*32);
     if(brk){if(st===0||st===8)bass(o,t,root,.7,ST*7,true);}
     else BASS.forEach(([ss,iv,len,v])=>{if(ss===st)bass(o,t,root+iv,v,ST*len*.9);});
     if(brk){if(st===0||st===8)ch.forEach(m=>pad(o,t,m,.9,ST*8.2));}
     else{
       COMP.forEach(([ss,v,d])=>{if(ss===st)ch.forEach(m=>ep(o,t,m,v,d));});
       if(pass>=2&&st===14)ch.forEach(m=>ep(o,t,m,.4,.08));
-      if(pass>=1&&(st===0||st===8))ch.forEach(m=>pad(o,t,m,.4,ST*8.2));
+      if(pass>=1&&(st===0||st===8))ch.forEach(m=>pad(o,t,m,chorus?.5:.4,ST*8.2));
+      /* electric-piano answers at the end of each two-bar phrase */
+      if(big&&bar%2===1&&st>=12){const arp=[...ch].sort((x,y)=>x-y);ep(o,t,arp[st-12]+12,.45,.12);}
     }
     if(pass===2&&((bar%2===1&&st===0)||(bar===7&&st===10)))brass(o,t,ch,.2);
+    if(big&&((bar%2===0&&st===14)||(bar===7&&st===10)||(pass===5&&bar%2===1&&st===0)))brass(o,t,ch,.16);
     if(build&&bar===7&&st===14)brass(o,t,ch,.14);
-    const n=MELMAP[bar*16+st];
-    if(n){
-      if(pass===1||pass===2)lead(o,t,n[0],ST*n[1]*.95,1);
-      if(pass===2)lead(o,t,n[0]-12,ST*n[1]*.95,.55);
-      if(brk)ep(o,t,n[0]+12,.6,ST*n[1]);
+    const n=MELMAP[bar*16+st],c=CHOMAP[bar*16+st];
+    if(pass===1&&n)lead(o,t,n[0],ST*n[1]*.95,.9);
+    if(chorus&&c){
+      lead(o,t,c[0],ST*c[1]*.95,1);
+      lead(o,t,harm(c[0],root,ch),ST*c[1]*.95,.45);
+      if(big)lead(o,t,c[0]-12,ST*c[1]*.95,.4);
     }
+    if(brk&&n)ep(o,t,n[0]+12,.6,ST*n[1]);
   }
   function sched(){if(!ctx||ctx.state!=='running')return;
-    while(nextT<ctx.currentTime+ahead){playStep(step,nextT);nextT+=ST*(step%2?.9:1.1);step=(step+1)%512;}}
+    while(nextT<ctx.currentTime+ahead){playStep(step,nextT);nextT+=ST*(step%2?.9:1.1);step=(step+1)%768;}}
   const level=()=>mode==='full'?.54:.5;
   function fade(to,sec){const c=ctx,g=musBus.gain;g.cancelScheduledValues(c.currentTime);g.setValueAtTime(g.value,c.currentTime);g.linearRampToValueAtTime(to,c.currentTime+sec);}
   function startMusic(){if(!musOn||playing)return;const c=ac();if(!c)return;
