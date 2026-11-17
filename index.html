@@ -966,7 +966,7 @@ const SFX=(()=>{
   }
   function sched(){if(!ctx||ctx.state!=='running')return;
     while(nextT<ctx.currentTime+ahead){playStep(step,nextT);nextT+=ST*(step%2?.9:1.1);step=(step+1)%512;}}
-  const level=()=>mode==='full'?.6:.5;
+  const level=()=>mode==='full'?.54:.5;
   function fade(to,sec){const c=ctx,g=musBus.gain;g.cancelScheduledValues(c.currentTime);g.setValueAtTime(g.value,c.currentTime);g.linearRampToValueAtTime(to,c.currentTime+sec);}
   function startMusic(){if(!musOn||playing)return;const c=ac();if(!c)return;
     playing=true;step=0;nextT=c.currentTime+.08;fade(level(),1.2);timer=setInterval(sched,25);sched();}
