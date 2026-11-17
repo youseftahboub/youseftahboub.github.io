@@ -793,6 +793,7 @@ const SFX=(()=>{
       verb.buffer=ir;const vg=ctx.createGain();vg.gain.value=.3;verb.connect(vg);vg.connect(master);
       dly=ctx.createDelay(1);dly.delayTime.value=ST*3;const fb=ctx.createGain();fb.gain.value=.32;const dw=ctx.createGain();dw.gain.value=.22;
       const dlp=ctx.createBiquadFilter();dlp.type='lowpass';dlp.frequency.value=2500;dly.connect(dlp);dlp.connect(fb);fb.connect(dly);dlp.connect(dw);dw.connect(musBus);
+      renderHats();
       noiseBuf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*1.5),ctx.sampleRate);
       const nd=noiseBuf.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
     }
@@ -869,15 +870,14 @@ const SFX=(()=>{
   function ep(o,t,m,vel,dur){
     const f=mtof(m),g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2800;
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.045*vel,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+dur+.4);
-    [[1,'sine',1],[2.002,'sine',.22],[1.004,'triangle',.35]].forEach(([r,ty,a])=>{const v=ctx.createOscillator(),ga=ctx.createGain();
+    [[1,'sine',1],[1.004,'triangle',.4]].forEach(([r,ty,a])=>{const v=ctx.createOscillator(),ga=ctx.createGain();
       v.type=ty;v.frequency.value=f*r;ga.gain.value=a;v.connect(ga);ga.connect(lp);v.start(t);v.stop(t+dur+.45);});
     lp.connect(g);g.connect(o);send(g,.35);
-    osc(o,'sine',f*4,t,.002,.01*vel,.1);
   }
   function pad(o,t,m,vel,dur){
     const f=mtof(m),g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03*vel,t+.35);g.gain.linearRampToValueAtTime(0,t+dur);
-    [[1,'triangle'],[1.006,'sine'],[.997,'sine']].forEach(([r,ty])=>{const v=ctx.createOscillator();v.type=ty;v.frequency.value=f*r;v.connect(lp);v.start(t);v.stop(t+dur+.05);});
+    [[1,'triangle'],[1.006,'sine']].forEach(([r,ty])=>{const v=ctx.createOscillator();v.type=ty;v.frequency.value=f*r;v.connect(lp);v.start(t);v.stop(t+dur+.05);});
     lp.connect(g);g.connect(o);send(g,.5);
   }
   function bass(o,t,m,vel,dur,sub){
@@ -892,12 +892,18 @@ const SFX=(()=>{
   const snare=(o,t,v)=>{nz(o,t,.11,.13*v,'bandpass',1900,1200,.8,.08);osc(o,'triangle',190,t,.002,.13*v,.08,140);};
   /* metallic hi-hat: six detuned square tones through band and high-pass filters, like a classic drum machine (no white noise) */
   const HATF=[2,3,4.16,5.43,6.79,8.21].map(r=>r*41);
+  const HATB={};
+  function renderHats(){
+    const sr=ctx.sampleRate,mk=d=>{const oc=new OfflineAudioContext(1,Math.ceil(sr*(d+.03)),sr),g=oc.createGain(),bp=oc.createBiquadFilter(),hp=oc.createBiquadFilter();
+      bp.type='bandpass';bp.frequency.value=9500;bp.Q.value=.9;hp.type='highpass';hp.frequency.value=7000;
+      g.gain.setValueAtTime(0,0);g.gain.linearRampToValueAtTime(.05,.002);g.gain.exponentialRampToValueAtTime(.0001,d);
+      HATF.forEach(f=>{const s=oc.createOscillator();s.type='square';s.frequency.value=f;s.connect(bp);s.start(0);s.stop(d+.02);});
+      bp.connect(hp);hp.connect(g);g.connect(oc.destination);return oc.startRendering();};
+    mk(.045).then(b=>HATB.c=b).catch(()=>{});mk(.18).then(b=>HATB.o=b).catch(()=>{});
+  }
   function hat(o,t,v,open){
-    const d=open?.18:.045,g=ctx.createGain(),bp=ctx.createBiquadFilter(),hp=ctx.createBiquadFilter();
-    bp.type='bandpass';bp.frequency.value=9500;bp.Q.value=.9;hp.type='highpass';hp.frequency.value=7000;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05*v,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    HATF.forEach(f=>{const s=ctx.createOscillator();s.type='square';s.frequency.value=f;s.connect(bp);s.start(t);s.stop(t+d+.02);});
-    bp.connect(hp);hp.connect(g);g.connect(o);
+    const b=open?HATB.o:HATB.c;if(!b)return;
+    const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=b;g.gain.value=v;s.connect(g);g.connect(o);s.start(t);
   }
 
   const MEL=[
@@ -944,7 +950,7 @@ const SFX=(()=>{
     v.frequency.setValueAtTime(110,t);v.frequency.exponentialRampToValueAtTime(880,t+dur);lp.type='lowpass';lp.frequency.setValueAtTime(400,t);lp.frequency.exponentialRampToValueAtTime(5000,t+dur);
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+.03);v.connect(lp);lp.connect(g);g.connect(o);send(g,.4);v.start(t);v.stop(t+dur+.05);}
 
-  let playing=false,mode='lite',step=0,nextT=0,timer=null,ahead=.15;
+  let playing=false,mode='lite',step=0,nextT=0,timer=null,ahead=.3;
   function playStep(s,t){
     const o=musBus,b32=Math.floor(s/16),bar=b32%8,st=s%16,[root,ch]=P[bar*2+(st>=8?1:0)];
     if(mode==='lite'){
@@ -1006,7 +1012,7 @@ const SFX=(()=>{
   /* keep music going in background tabs: browsers throttle timers there, so schedule further ahead */
   document.addEventListener('visibilitychange',()=>{if(!ctx)return;
     if(document.hidden){ahead=2;if(!playing)ctx.suspend();else sched();}
-    else{ahead=.15;ctx.resume();if(playing)nextT=Math.max(nextT,ctx.currentTime+.05);}});
+    else{ahead=.3;ctx.resume();if(playing)nextT=Math.max(nextT,ctx.currentTime+.05);}});
 
   let last=0;
   return{
