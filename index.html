@@ -889,7 +889,7 @@ const SFX=(()=>{
     g.connect(o);
   }
   const kick=(o,t,v)=>{osc(o,'sine',150,t,.002,.55*v,.28,42);nz(o,t,.02,.08*v,'highpass',3000);};
-  const snare=(o,t,v)=>{nz(o,t,.16,.22*v,'highpass',1300,0,.7,.15);osc(o,'triangle',190,t,.002,.12*v,.07,140);};
+  const snare=(o,t,v)=>{nz(o,t,.11,.13*v,'bandpass',1900,1200,.8,.08);osc(o,'triangle',190,t,.002,.13*v,.08,140);};
   /* metallic hi-hat: six detuned square tones through band and high-pass filters, like a classic drum machine (no white noise) */
   const HATF=[2,3,4.16,5.43,6.79,8.21].map(r=>r*41);
   function hat(o,t,v,open){
@@ -938,8 +938,8 @@ const SFX=(()=>{
     f.frequency.exponentialRampToValueAtTime(3200,t+.04);f.frequency.exponentialRampToValueAtTime(600,t+dur);f.connect(o);osc(f,'sawtooth',mtof(m+12),t,.01,.016,dur,0,.3);});}
   const shaker=(o,t,v)=>nz(o,t,.03,.032*v,'highpass',6000,0,.7);
   const conga=(o,t,v,hi)=>{osc(o,'sine',hi?330:235,t,.002,.17*v,.14,hi?255:180);nz(o,t,.02,.04*v,'bandpass',1100,0,1.5);};
-  const clap=(o,t,v)=>[0,.012,.024].forEach(d=>nz(o,t+d,d===.024?.15:.02,.16*v,'bandpass',1500,0,1.5,.3));
-  const crash=(o,t)=>nz(o,t,1.2,.12,'highpass',5000,0,.5,.4);
+  const clap=(o,t,v)=>[0,.012,.024].forEach(d=>nz(o,t+d,d===.024?.11:.018,.1*v,'bandpass',1400,0,1.2,.12));
+  const crash=(o,t)=>nz(o,t,1.1,.075,'highpass',5000,0,.5,.3);
   function riser(o,t,dur){const v=ctx.createOscillator(),g=ctx.createGain(),lp=ctx.createBiquadFilter();v.type='sawtooth';
     v.frequency.setValueAtTime(110,t);v.frequency.exponentialRampToValueAtTime(880,t+dur);lp.type='lowpass';lp.frequency.setValueAtTime(400,t);lp.frequency.exponentialRampToValueAtTime(5000,t+dur);
     g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+.03);v.connect(lp);lp.connect(g);g.connect(o);send(g,.4);v.start(t);v.stop(t+dur+.05);}
@@ -965,7 +965,7 @@ const SFX=(()=>{
       else if(build&&bar===6){if(st%2===0)snare(o,t,.35+st/16*.4);}
       else{
         if(st===4||st===12)snare(o,t,1);
-        if(st===7||st===15)snare(o,t,.22);
+        if(st===15&&bar%2===1)snare(o,t,.18);
         if(bar===7&&st>=13)snare(o,t,.35+(st-13)*.25);
         if(big&&(st===4||st===12))clap(o,t,.35);
       }
