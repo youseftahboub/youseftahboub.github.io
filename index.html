@@ -890,7 +890,15 @@ const SFX=(()=>{
   }
   const kick=(o,t,v)=>{osc(o,'sine',150,t,.002,.55*v,.28,42);nz(o,t,.02,.08*v,'highpass',3000);};
   const snare=(o,t,v)=>{nz(o,t,.16,.22*v,'highpass',1300,0,.7,.15);osc(o,'triangle',190,t,.002,.12*v,.07,140);};
-  const hat=(o,t,v,open)=>nz(o,t,open?.2:.04,.065*v,'highpass',7500,0,.7);
+  /* metallic hi-hat: six detuned square tones through band and high-pass filters, like a classic drum machine (no white noise) */
+  const HATF=[2,3,4.16,5.43,6.79,8.21].map(r=>r*41);
+  function hat(o,t,v,open){
+    const d=open?.18:.045,g=ctx.createGain(),bp=ctx.createBiquadFilter(),hp=ctx.createBiquadFilter();
+    bp.type='bandpass';bp.frequency.value=9500;bp.Q.value=.9;hp.type='highpass';hp.frequency.value=7000;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05*v,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    HATF.forEach(f=>{const s=ctx.createOscillator();s.type='square';s.frequency.value=f;s.connect(bp);s.start(t);s.stop(t+d+.02);});
+    bp.connect(hp);hp.connect(g);g.connect(o);
+  }
 
   const MEL=[
     [0,0,72,2],[0,3,75,1],[0,4,77,3],[0,8,79,2],[0,10,80,2],[0,12,79,1],[0,14,77,2],
@@ -941,7 +949,7 @@ const SFX=(()=>{
     const o=musBus,b32=Math.floor(s/16),bar=b32%8,st=s%16,[root,ch]=P[bar*2+(st>=8?1:0)];
     if(mode==='lite'){
       if(st===0||st===8){ch.forEach(m=>pad(o,t,m,.8,ST*8.2));bass(o,t,root,.6,ST*7,true);}
-      if(st%4===2)hat(o,t,.35);
+      if(st%4===2)hat(o,t,.25);
       return;
     }
     /* 48-bar arrangement: groove → verse → chorus → bigger chorus → breakdown & build → final chorus */
@@ -962,7 +970,6 @@ const SFX=(()=>{
         if(big&&(st===4||st===12))clap(o,t,.35);
       }
       if(st===14)hat(o,t,.8,true);else hat(o,t,st%2?.3:.65);
-      if(st%2===1)shaker(o,t,st%4===3?1:.6);
       if(pass>=1&&(st===3||st===9||st===11))conga(o,t,st===9?1:.7,st!==9);
       if(big&&(st===5||st===13))conga(o,t,.6,true);
     }
