@@ -301,6 +301,10 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 .paper .stamp b{display:block;font-size:26px;font-weight:400}
 .paper h3{font-family:var(--f-serif);font-weight:400;font-size:clamp(20px,2.4vw,28px);line-height:1.2}
 .paper .kind{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;color:var(--red)}
+.paper.wip{background:var(--red);color:var(--paper);box-shadow:inset 0 0 0 2px var(--paper),10px 10px 0 var(--ink)}
+.paper.wip .stamp{background:var(--ink);grid-row:1/5}
+.paper.wip .kind{color:var(--paper)}
+.wip-body{margin:4px 0 0;max-width:60ch}
 .paper .topic{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .paper h3 a{color:inherit;text-decoration:none;background-image:linear-gradient(var(--red),var(--red));background-size:0 3px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s}
 .paper h3 a:hover,.paper h3 a:focus-visible{background-size:100% 3px}
@@ -399,8 +403,8 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 .rec-tag{font-family:var(--f-display);font-size:clamp(16px,2vw,22px);letter-spacing:.05em;background:var(--paper);color:var(--ink);padding:4px 16px 6px;transform:skewX(-12deg) rotate(-2deg);box-shadow:5px 5px 0 var(--ink)}
 .rec-close{font-family:var(--f-display);font-size:15px;letter-spacing:.04em;padding:7px 14px;background:var(--ink);color:var(--paper);transform:skewX(-12deg);box-shadow:4px 4px 0 var(--paper)}
 .rec-close:hover{background:var(--paper);color:var(--ink)}
-.sheet{max-width:1180px;margin:0 auto;background:var(--paper);color:var(--ink);padding:22px clamp(16px,2.6vw,32px) 24px;transform:rotate(-.5deg);box-shadow:14px 14px 0 var(--ink)}
-.sh-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px 28px;padding-bottom:14px;border-bottom:4px solid var(--ink)}
+.sheet{max-width:1180px;margin:0 auto;background:var(--paper);color:var(--ink);padding:16px clamp(16px,2.6vw,32px) 18px;transform:rotate(-.5deg);box-shadow:14px 14px 0 var(--ink)}
+.sh-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px 28px;padding-bottom:10px;border-bottom:4px solid var(--ink)}
 .sh-id{min-width:0}
 .sh-name{font-size:clamp(24px,3.6vw,46px)}
 .sh-role{margin:10px 0 0;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
@@ -408,19 +412,19 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
 .sh-contact dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;font-weight:400;color:var(--dim)}
 .sh-contact dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .sh-contact a,.sh-pubs a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:2px}
-.sh-cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px 34px;margin-top:16px}
-.sh-side{display:grid;gap:14px;align-content:start}
+.sh-cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px 34px;margin-top:12px}
+.sh-side{display:grid;gap:10px;align-content:start}
 .sh-h{display:inline-block;margin:0 0 10px;font-family:var(--f-display);font-weight:400;font-size:15px;letter-spacing:.08em;background:var(--ink);color:var(--paper);padding:3px 12px 4px;transform:skewX(-12deg);box-shadow:4px 4px 0 var(--red)}
-.sh-list{display:grid;gap:11px}
+.sh-list{display:grid;gap:8px}
 .sh-jt{display:flex;justify-content:space-between;align-items:baseline;gap:4px 12px;flex-wrap:wrap}
 .sh-jt b{font-size:15.5px;line-height:1.25}
 .sh-d{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--red);white-space:nowrap;font-variant-numeric:tabular-nums}
 .sh-org{font-size:13px;font-style:italic;color:var(--dim)}
-.sheet ul{margin:4px 0 0;padding-left:18px;display:grid;gap:1px;font-size:13.5px;line-height:1.4}
+.sheet ul{margin:3px 0 0;padding-left:18px;display:grid;gap:1px;font-size:13px;line-height:1.36}
 .sheet li::marker{color:var(--red)}
 .sh-pubs{padding-left:18px}
 .sh-pubs .pd{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--red);margin-left:6px;white-space:nowrap}
-.sh-skills{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;margin:0;font-size:13.5px}
+.sh-skills{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;margin:0;font-size:13px;line-height:1.36}
 .sh-skills dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;color:var(--dim);padding-top:3px;text-transform:uppercase}
 .sh-skills dd{margin:0}
 
@@ -656,7 +660,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
         <p class="hero-eye rise" style="--i:0">SERVICE DESK SUPERVISOR · M.S. CYBERSECURITY CANDIDATE</p>
         <h2 class="ransom hero-name rise" data-ransom="YOUSEF" style="--i:1" aria-label="Yousef Tahboub"></h2>
         <div class="ransom hero-name row2 rise" data-ransom="TAHBOUB" style="--i:2" aria-hidden="true"></div>
-        <p class="lede rise" style="--i:3">Yousef leads <em>Montclair State's service desk</em>, publishes security research, and is finishing an M.S. in Cybersecurity.</p>
+        <p class="lede rise" style="--i:3">Yousef enforces identity and access security at <em>Montclair State's service desk</em>, publishes security research, and is finishing an M.S. in Cybersecurity.</p>
         <div class="cta rise" style="--i:4">
           <button class="cta-btn" data-jump="timeline">VIEW TIMELINE</button>
           <button class="cta-btn alt" data-jump="intel">SEE MY WORK</button>
@@ -667,8 +671,8 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
       </div>
 
       <div class="numbers">
-        <div class="num-card rise" style="--i:5"><b>3,600+</b><span>campus clients supported</span></div>
-        <div class="num-card rise" style="--i:6"><b>30–40</b><span>student workers supervised</span></div>
+        <div class="num-card rise" style="--i:5"><b>3,600+</b><span>users under his access policies</span></div>
+        <div class="num-card rise" style="--i:6"><b>30–40</b><span>student technicians trained</span></div>
         <div class="num-card rise" style="--i:7"><b>4.00</b><span>M.S. Cybersecurity GPA</span></div>
         <div class="num-card rise" style="--i:8"><b>3</b><span>arXiv preprints</span></div>
       </div>
@@ -685,7 +689,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
         <div class="contact rise" style="--i:10">
           <p class="label">Contact</p>
           <div class="c-row"><span class="c-k">EMAIL</span><span class="c-v" id="cEmail">youseftahboub@yahoo.com</span><button class="copy" data-copy="cEmail">COPY</button></div>
-          <div class="c-row"><span class="c-k">LINKEDIN</span><a class="c-v" href="https://www.linkedin.com/in/yousef-tahboub" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub</a><span></span></div>
+          <div class="c-row"><span class="c-k">LINKEDIN</span><a class="c-v" href="https://www.linkedin.com/in/yousef-tahboub-b06b412a1/" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub-b06b412a1</a><span></span></div>
         </div>
       </div>
       <p class="whisper rise" style="--i:11">// on the start screen, the logo answers to five knocks. it also knows when it's showtime.</p>
@@ -795,7 +799,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
       </div>
       <dl class="sh-contact">
         <dt>EMAIL</dt><dd id="rEmail">youseftahboub@yahoo.com</dd><dd><button class="copy" data-copy="rEmail">COPY</button></dd>
-        <dt>LINKEDIN</dt><dd><a href="https://www.linkedin.com/in/yousef-tahboub" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub</a></dd><dd></dd>
+        <dt>LINKEDIN</dt><dd><a href="https://www.linkedin.com/in/yousef-tahboub-b06b412a1/" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub-b06b412a1</a></dd><dd></dd>
         <dt>BASE</dt><dd>Clifton, NJ</dd><dd></dd>
       </dl>
     </header>
@@ -819,7 +823,7 @@ a.c-v{text-decoration:underline;text-decoration-color:var(--red);text-decoration
     <div class="fin-card">
       <h3>Thanks for exploring. Let's work together.</h3>
       <div class="fc-row"><span>EMAIL</span><b id="fEmail">youseftahboub@yahoo.com</b><button class="copy" data-copy="fEmail">COPY</button></div>
-      <div class="fc-row"><span>LINKEDIN</span><a href="https://www.linkedin.com/in/yousef-tahboub" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub</a><i></i></div>
+      <div class="fc-row"><span>LINKEDIN</span><a href="https://www.linkedin.com/in/yousef-tahboub-b06b412a1/" target="_blank" rel="noopener">linkedin.com/in/yousef-tahboub-b06b412a1</a><i></i></div>
       <div class="fin-btns"><button class="cta-btn red" data-rec>RECRUITER MODE</button><button class="cta-btn" id="finClose">KEEP EXPLORING</button></div>
     </div>
   </div>
@@ -1255,13 +1259,13 @@ const nowIdx=mi(now.getFullYear(),now.getMonth())+(now.getDate()-1)/31;
 
 const JOBS=[
   {org:'Montclair State University',role:'Service Desk Supervisor',place:'Montclair, NJ',when:'NOV 2024 — PRESENT',s:mi(2024,10),e:'now',short:'SERVICE DESK SUPERVISOR',art:'night',r:'-.6deg',
-   pts:['Resolve technical issues for 3,600+ campus clients via phone, email, and ServiceNow.','Verify user identities for password resets and MFA enrollment, enforcing access control policies.','Supervise 30–40 student workers; lead hiring, onboarding, and daily operations.','Maintain 30+ knowledge base articles to standardize troubleshooting.']},
-  {org:'Pure Technology Inc.',role:'UI/UX Product Design Intern',place:'Montclair, NJ',when:'JUL 2025 — DEC 2025',s:mi(2025,6),e:mi(2026,0),short:'UI/UX INTERN',art:'wire',r:'.5deg',
-   pts:['Designed responsive, reusable UI components in Figma and Miro.','Refined layouts with leadership through iterative, user-focused feedback.']},
+   pts:['Enforce identity-verification and access control policies for password resets and MFA enrollment for 3,600+ users.','Triage and resolve incidents in ServiceNow, escalating account and access issues.','Hire, train, and supervise 30–40 student technicians on identity-verification procedures.','Maintain 30+ knowledge base articles standardizing troubleshooting and access procedures.']},
+  {org:'Pure Technology Inc.',role:'Systems Architecture Intern',place:'Montclair, NJ',when:'JUL 2025 — DEC 2025',s:mi(2025,6),e:mi(2026,0),short:'SYSTEMS INTERN',art:'wire',r:'.5deg',
+   pts:['Mapped backend architecture, data flows (DFDs), and database logic in Miro and Figma.','Translated technical requirements into blueprints for non-technical stakeholders and developers.']},
   {org:'Johnson & Johnson',role:'Data Science & Data Engineering Co-op',place:'Raritan, NJ',when:'JAN 2025 — JUN 2025',s:mi(2025,0),e:mi(2025,6),short:'DATA CO-OP',art:'pipeline',r:'-.4deg',
-   pts:['Supported 100+ global enterprise applications, maintaining functionality and reliability.','Managed vendor incidents and service requests from intake to resolution.','Improved operational efficiency through data-driven process improvements.']},
+   pts:['Supported availability and reliability of 100+ global enterprise applications.','Managed vendor incidents and service requests from intake to resolution.','Improved operational efficiency through data-driven process improvements.']},
   {org:'TeamLogic IT',role:'IT Intern',place:'Morris Plains, NJ',when:'AUG 2024 — DEC 2024',s:mi(2024,7),e:mi(2025,0),short:'IT INTERN',art:'cable',r:'.7deg',
-   pts:['Built PCs and installed and configured Windows to client specifications.','Troubleshot hardware and software issues through a ticketing system.','Performed on-site assessments that sped up issue resolution.']}
+   pts:['Built, imaged, and configured Windows workstations to client specifications.','Diagnosed hardware and software issues through a ticketing system and on-site assessments, speeding resolution.']}
 ];
 const CERTS=[
   {org:'Scrum Alliance',role:'Certified ScrumMaster® (CSM)',place:'',when:'CERTIFIED',art:'sprint',r:'.4deg',
@@ -1269,7 +1273,7 @@ const CERTS=[
 ];
 const EDU=[
   {org:'Montclair State University',role:'M.S. Cybersecurity',place:'Montclair, NJ',when:'EXPECTED MAY 2027',art:'cipher',r:'.4deg',
-   pts:['GPA: 4.00','Coursework: Cryptography, Network Security, Computer Security']},
+   pts:['GPA: 4.00','Coursework: Cryptography, Network Security, Computer Security','Research: Co-developing a Qwen-based LLM that detects phishing emails and explains threats via chatbot.']},
   {org:'Montclair State University',role:'B.S. Information Technology',place:'Montclair, NJ',when:'MAY 2026',art:'commence',r:'-.5deg',
    pts:['GPA: 3.95 · Dean’s List all semesters','Coursework: Computer Networks, Systems Administration, Internet Computing, Operating Systems, IT Project Management']}
 ];
@@ -1306,24 +1310,30 @@ function buildMissions(){
   EDU.forEach(it=>add($('#edu'),it,true));
   CERTS.forEach(it=>add($('#certs'),it,true));
 }
+const RESEARCH=[{title:'Phishing detection with a Qwen-based LLM',
+  body:'Co-developing a Qwen-based large language model that detects phishing emails and explains the threat to the user through a chatbot.',
+  tags:['PHISHING ANALYSIS','LLM','EMAIL SECURITY'],r:'.5deg'}];
 function buildPapers(){
-  const P=$('#papers');PUBS.forEach((p,i)=>{const d=document.createElement('article');d.className='paper rise';d.style.cssText=`--pr:${p.r};--i:${i+1}`;
+  const P=$('#papers');
+  RESEARCH.forEach(x=>{const d=document.createElement('article');d.className='paper wip rise';d.style.cssText=`--pr:${x.r};--i:1`;
+    d.innerHTML=`<div class="stamp">NOW<b>2026</b></div><span class="kind">IN PROGRESS · M.S. RESEARCH</span><h3>${x.title}</h3><p class="wip-body">${x.body}</p><div class="topic">${x.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;P.appendChild(d);});
+  PUBS.forEach((p,i)=>{const d=document.createElement('article');d.className='paper rise';d.style.cssText=`--pr:${p.r};--i:${i+1}`;
     d.innerHTML=`<div class="stamp">${p.mon}<b>${p.yr}</b></div><span class="kind">ARXIV:${p.id}</span><h3><a href="${p.url}" target="_blank" rel="noopener">“${p.title}”</a></h3><div class="topic">${p.tags.map(t=>`<span>${t}</span>`).join('')}<a class="read" href="${p.url}" target="_blank" rel="noopener">READ ON ARXIV ↗</a></div>`;P.appendChild(d);});
 }
 
 const STATS=[
-  {name:'COMMUNICATION',rank:'LV 4',lv:4,why:'Explains fixes to 3,600+ campus clients; fluent in Arabic and English, intermediate in Korean.'},
-  {name:'SUPPORT',rank:'LV 5',lv:5,why:'Front-line IT across ServiceNow, identity verification, MFA enrollment, and hardware builds.'},
-  {name:'SECURITY',rank:'LV 4',lv:4,why:'M.S. in Cybersecurity at a 4.00 GPA, with published research on MFA and secure voting.'},
-  {name:'LEADERSHIP',rank:'LV 4',lv:4,why:'Supervises 30–40 student workers and runs their hiring and onboarding; Certified ScrumMaster.'},
-  {name:'DESIGN',rank:'LV 3',lv:3,why:'Built responsive, reusable UI components in Figma and Miro at Pure Technology.'}
+  {name:'COMMUNICATION',rank:'LV 4',lv:4,why:'Turns technical requirements into blueprints for non-technical stakeholders; fluent in Arabic and English, intermediate in Korean.'},
+  {name:'SUPPORT',rank:'LV 5',lv:5,why:'Triages and resolves incidents in ServiceNow for 3,600+ users, escalating account and access issues.'},
+  {name:'SECURITY',rank:'LV 4',lv:4,why:'Enforces identity verification and MFA policy daily; M.S. in Cybersecurity at a 4.00 GPA with published MFA research.'},
+  {name:'LEADERSHIP',rank:'LV 4',lv:4,why:'Hires, trains, and supervises 30–40 student technicians; Certified ScrumMaster.'},
+  {name:'SYSTEMS',rank:'LV 3',lv:3,why:'Mapped backend architecture, data flows, and database logic at Pure Technology.'}
 ];
 const SKILLS=[
-  ['Programming',['Python','Java','HTML','C']],
-  ['Security tools',['Wireshark','Cisco VPN','Duo','Microsoft Authenticator']],
-  ['Tools',['ServiceNow','Tableau','Figma','Miro','Photoshop','Illustrator','Microsoft Suite']],
+  ['Security',['Identity & Access Management','Multi-Factor Authentication','Incident Management','Network Security','Cryptography','Phishing Analysis']],
+  ['Tools',['Wireshark','ServiceNow','Duo','Microsoft Authenticator','Cisco VPN','Tableau','Microsoft 365']],
+  ['Programming',['Python','Java','C','HTML']],
   ['Certification',['Certified ScrumMaster® · Scrum Alliance']],
-  ['Languages',['العربية · Arabic','English','한국어 · Korean (intermediate)']]
+  ['Languages',['العربية · Arabic (fluent)','English (fluent)','한국어 · Korean (intermediate)']]
 ];
 function buildStats(){
   const svg=$('#penta'),cx=200,cy=200,R=150,N=5;
@@ -1510,8 +1520,9 @@ new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&current==='inte
 
 /* ---------- loading tips ---------- */
 const TIPS=[
-  'Yousef resolves technical issues for 3,600+ campus clients by phone, email, and ServiceNow.',
-  'Yousef supervises 30–40 student workers and runs their hiring and onboarding.',
+  'Yousef enforces identity verification for password resets and MFA enrollment for 3,600+ users.',
+  'Yousef hires and trains 30–40 student technicians on identity-verification procedures.',
+  'Yousef is co-developing a Qwen-based LLM that detects phishing emails and explains the threat.',
   'Yousef keeps 30+ knowledge base articles up to date so every fix is done the same way.',
   'Yousef holds a 4.00 GPA in his M.S. in Cybersecurity.',
   'Yousef made the Dean’s List every semester of his B.S. in Information Technology.',
@@ -1521,7 +1532,7 @@ const TIPS=[
   'Yousef speaks Arabic and English fluently, and Korean at an intermediate level.',
   'Yousef is a Certified ScrumMaster through Scrum Alliance.',
   'Yousef’s security toolkit includes Wireshark, Cisco VPN, Duo, and Microsoft Authenticator.',
-  'Yousef designed reusable UI components in Figma and Miro at Pure Technology.',
+  'At Pure Technology, Yousef mapped backend architecture and data flows for developers.',
   'Use ↑ ↓ and Enter to move through the menu like a game.',
   'Psst. Somewhere on this site there’s a hidden archive.'
 ];
